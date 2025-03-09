@@ -10,13 +10,8 @@ jobs:
         run: npm ci
       - name: Test code
         run: npm run test
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist-files
-          path: |
-            package.json
-  deploy:
+  build:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -25,5 +20,15 @@ jobs:
         run: npm ci
       - name: Build code
         run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: |
+            package.json
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy code
         run: echo "Deploying ...."
